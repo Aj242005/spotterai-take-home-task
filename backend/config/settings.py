@@ -4,9 +4,20 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-spotter-eld-planner-secret-key-production-grade'
+# Vercel sets VERCEL=1 inside its build and function environments. We use it to
+# pick safe production defaults without having to remember to set every var.
+ON_VERCEL = bool(os.environ.get('VERCEL'))
 
-DEBUG = True
+# The real key comes from DJANGO_SECRET_KEY in production. The fallback only
+# exists so a fresh local checkout runs; it must never sign production tokens.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-spotter-eld-planner-secret-key-local-dev-only',
+)
+
+# Debug defaults on for local work and off on Vercel, where a public stack trace
+# is a disclosure bug rather than a convenience.
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False' if ON_VERCEL else 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,10 +75,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# Vercel Functions mount the deployment read-only; only /tmp is writable, and
+# /tmp is wiped between cold starts. SQLite therefore still works, but the data
+# belongs to one instance and does not survive a cold start.
+DB_NAME = os.environ.get(
+    'DJANGO_DB_PATH',
+    '/tmp/db.sqlite3' if ON_VERCEL else str(BASE_DIR / 'db.sqlite3'),
+)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DB_NAME,
     }
 }
 
@@ -87,8 +106,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_collected')
+# The built frontend is not in the repository (it is a build artifact), so this
+# directory is absent on a clean Vercel build. Filtering it keeps collectstatic
+# from warning about — or failing on — a path that only exists on a dev machine.
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'staticfiles', 'frontend'),
+    d for d in [os.path.join(BASE_DIR, 'staticfiles', 'frontend')]
+    if os.path.isdir(d)
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
