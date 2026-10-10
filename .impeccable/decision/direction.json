@@ -1,0 +1,211 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned Duty Recorder. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Duty Recorder",
+      "kicker": "THE ROLL",
+      "lineage": "Sangamo and Kienzle tachograph chart discs, reefer temperature recorders, mechanical hour meters",
+      "thesis": "The 24-hour duty day is a machined instrument record: the trip revolves once on a printed chart disc and the pen draws what the driver will sign.",
+      "palette": [
+        "#14171a",
+        "#efe9dc",
+        "#1f3b57",
+        "#d2451f",
+        "#e0a13c"
+      ],
+      "materials": [
+        "anodised aluminium",
+        "printed chart paper",
+        "ink pen trace",
+        "glass lens"
+      ],
+      "viewport": "One anodised instrument chassis fills the frame: knurled winder, glass-lensed 24-hour disc turning under a pen, and a real three-field route plate engraved into the faceplate that plans the trip in place.",
+      "risk": "Reads as a prop unless the disc is driven by the user's own trip data.",
+      "raised": [
+        {
+          "from": "challenger-ikebana-ma",
+          "raise": "Charged emptiness \u2014 the faceplate keeps halved silence around the disc instead of filling every quadrant."
+        },
+        {
+          "from": "challenger-hand-drawn-zine",
+          "raise": "Rule by demonstration \u2014 each \u00a7 395 limit is plotted as an event on the disc, never described in a paragraph."
+        },
+        {
+          "from": "challenger-cabaret-bill",
+          "raise": "Lit or unlit \u2014 duty states print as solid ink or nothing; no midtone hedge."
+        }
+      ]
+    },
+    {
+      "id": "model-pick",
+      "label": "The Log Grid",
+      "kicker": "IMPECCABLE\u2019S PICK",
+      "lineage": "FMCSA MCS-59 daily log graph paper",
+      "thesis": "The 24-hour ruled grid becomes the page's whole architecture, printed at architectural scale.",
+      "palette": [
+        "#f4f1e8",
+        "#111827",
+        "#1d4ed8",
+        "#b91c1c"
+      ],
+      "materials": [
+        "ruled form paper",
+        "printed legends",
+        "red midnight rule"
+      ],
+      "viewport": "A full-bleed oversized graph row where one hour is a hand's width; the trip's first day draws itself in ink across it.",
+      "risk": "Also the direction most runs in this category land on."
+    },
+    {
+      "id": "challenger-seven-segment",
+      "label": "Segment Mask",
+      "verdict": "competitive",
+      "lineage": "seven-segment displays: bedside clocks, price totems, scoreboards",
+      "thesis": "Eight cells make every glyph, and unlit segments are drawn as deliberately as lit ones.",
+      "palette": [
+        "#0a0a0c",
+        "#ff3b24",
+        "#39e07a",
+        "#c9c9c9"
+      ],
+      "materials": [
+        "matte black ground",
+        "LED segments",
+        "designed ghost cells"
+      ],
+      "viewport": "One rigid eight-cell mask fills the viewport; the trip's duty states light in fixed slots as the calculation runs.",
+      "case": "Fuses cleanly \u2014 off-duty is real data, so absence becomes design \u2014 but loses on depth for a whole page.",
+      "risk": "A single display family is thin as a page's world.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-seven-segment-alarm-clock-hero.webp"
+    },
+    {
+      "id": "challenger-orienteering",
+      "label": "Course Over Terrain",
+      "verdict": "competitive",
+      "lineage": "ISOM orienteering maps and control descriptions",
+      "thesis": "Terrain is a fixed colour language and the route rides above it in one reserved purple.",
+      "palette": [
+        "#ffffff",
+        "#c8b18c",
+        "#7f9a4e",
+        "#a13bd6"
+      ],
+      "materials": [
+        "ISOM inks",
+        "contour line texture",
+        "purple course overlay"
+      ],
+      "viewport": "A fixed-scale terrain legend fills the frame with the numbered trip course laid over it and a coded description row per control.",
+      "case": "Fuses cleanly \u2014 every rest and fuel stop becomes a control with a coded row \u2014 but loses on audience identification.",
+      "risk": "Reads as a map product rather than a compliance instrument.",
+      "hero": "https://impeccable.style/worlds/cards/notation-diagram-systems-orienteering-map-hero.webp"
+    },
+    {
+      "id": "challenger-provenance-ribbon",
+      "label": "Custody Ribbon",
+      "verdict": "competitive",
+      "lineage": "museum acquisition provenance ribbons",
+      "thesis": "The day's hours are a custody chain: one continuous ribbon of possession through the trip.",
+      "palette": [
+        "#e7e0cf",
+        "#c0231f",
+        "#8a8f92"
+      ],
+      "materials": [
+        "archival buff",
+        "silk ribbon",
+        "fading stamp ink"
+      ],
+      "viewport": "A single dated ribbon threads the whole first viewport, folding at every duty transition the trip produces.",
+      "case": "Fuses cleanly \u2014 the duty line genuinely is a custody line \u2014 but loses narrowly on audience identification.",
+      "risk": "Reads archival when the ribbon stops moving.",
+      "hero": "https://impeccable.style/worlds/cards/exhibition-museum-curation-provenance-ribbon-hero.webp"
+    },
+    {
+      "id": "challenger-ikebana-ma",
+      "label": "Ikebana Ma",
+      "verdict": "declined",
+      "lineage": "tokonoma alcove arrangements",
+      "thesis": "Line and asymmetry make the surrounding emptiness the most active element.",
+      "palette": [
+        "#e4ded3",
+        "#6b6f63",
+        "#3d6ea8"
+      ],
+      "materials": [
+        "plaster ground",
+        "weathered branch",
+        "bronze vessel"
+      ],
+      "case": "Fuses poorly: dispatchers do not identify with a flower alcove, and precision suffers.",
+      "kept": "Charged emptiness around the active element.",
+      "hero": "https://impeccable.style/worlds/cards/growth-metamorphosis-branching-ikebana-ma-arrangement-hero.webp"
+    },
+    {
+      "id": "challenger-hand-drawn-zine",
+      "label": "Marker Zine",
+      "verdict": "declined",
+      "lineage": "hand-drawn technical zines",
+      "thesis": "A marker sketch on a napkin teaches a hard rule better than a spec sheet.",
+      "palette": [
+        "#f3ead8",
+        "#1b1b1b",
+        "#f5d64c",
+        "#26b7a8"
+      ],
+      "materials": [
+        "cream stock",
+        "marker ink",
+        "highlighter swipe"
+      ],
+      "case": "Fuses poorly: a friendly napkin hero undercuts a precision compliance tool.",
+      "kept": "Teaching a rule by plotting the actual event instead of describing it.",
+      "hero": "https://impeccable.style/worlds/cards/hand-drawn-zine-explainer-hero.webp"
+    },
+    {
+      "id": "challenger-cabaret-bill",
+      "label": "Two-State Bill",
+      "verdict": "declined",
+      "lineage": "Weimar-era cabaret bills",
+      "thesis": "Acid yellow and black with no midtone: everything resolves to lit or unlit at a hard edge.",
+      "palette": [
+        "#111111",
+        "#ecd400"
+      ],
+      "materials": [
+        "cheap stock",
+        "two harsh inks",
+        "hard lighting cut"
+      ],
+      "case": "Fuses poorly: the programme-of-acts topology does not map to a trip.",
+      "kept": "No midtone: every state resolves to lit or unlit with a hard edge.",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-weimar-cabaret-bill-hero.webp"
+    }
+  ],
+  "reroll": {
+    "registers": [
+      "safer",
+      "bolder"
+    ]
+  },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "What dispatching software ships, executed impeccably: dark console, map beside a form, log sheet preview below.",
+    "palette": [
+      "#080c16",
+      "#0f172a",
+      "#2563eb"
+    ],
+    "materials": [
+      "flat panels",
+      "KPI cards",
+      "map tiles"
+    ],
+    "viewport": "The arrangement a visitor expects, at full craft.",
+    "risk": "Indistinguishable from the competition by design."
+  },
+  "steer": true
+}

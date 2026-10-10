@@ -1,0 +1,11 @@
+Django>=5.0,<5.2
+djangorestframework>=3.14.0
+djangorestframework-simplejwt>=5.3.0
+django-cors-headers>=4.3.0
+requests>=2.31.0
+pillow>=10.0.0
+gunicorn>=21.2.0
+python-dotenv>=1.0.0
+# Serves static files (admin + collected frontend) from the Django container
+# when DEBUG=False, so the Caddy edge can proxy /admin straight through.
+whitenoise>=6.6.0

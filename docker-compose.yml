@@ -1,0 +1,47 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Pin the stage explicitly: without this, compose builds the LAST stage
+      # in the Dockerfile, which is the Caddy edge image.
+      target: web
+    container_name: spotter_eld_planner
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+      - SECRET_KEY=production-secure-key-spotter-ai-eld
+      - DEBUG=False
+      # Caddy terminates TLS in front of this container, so Django must trust
+      # X-Forwarded-Proto (otherwise it redirects HTTPS requests back to HTTP).
+      - BEHIND_PROXY=True
+    restart: always
+
+  # Public entry point. Point your DuckDNS A/AAAA record at this host and set
+  # DUCKDNS_DOMAIN (e.g. in a .env file next to this compose file):
+  #
+  #   DUCKDNS_DOMAIN=yourname.duckdns.org
+  #
+  # Caddy fetches a Let's Encrypt certificate automatically on first start.
+  edge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: edge
+    container_name: spotter_edge
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DUCKDNS_DOMAIN=${DUCKDNS_DOMAIN:-localhost}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    restart: always
+
+volumes:
+  caddy_data:
+  caddy_config:

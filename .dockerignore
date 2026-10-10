@@ -1,0 +1,20 @@
+# Host-installed dependencies — the image installs its own via npm ci / pip.
+frontend/node_modules
+backend/venv
+backend/venv/**
+**/__pycache__
+**/*.pyc
+
+# Local build output — the Dockerfile builds the frontend itself and installs
+# it at ./staticfiles/frontend; the host copy must never leak into the image.
+frontend/dist
+backend/staticfiles
+backend/staticfiles_collected
+
+# Repo and editor noise
+.git
+.gitignore
+.impeccable
+.agents
+*.md
+node_modules

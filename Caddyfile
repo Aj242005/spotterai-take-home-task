@@ -1,0 +1,31 @@
+# Spotter AI edge server.
+#
+# DUCKDNS_DOMAIN is injected by docker-compose (e.g. spotter-ai.duckdns.org).
+# Point the DuckDNS A/AAAA record at the host running this stack and Caddy
+# fetches a Let's Encrypt certificate automatically on first start.
+
+{$DUCKDNS_DOMAIN:localhost} {
+	# The API and Django admin go to the backend container.
+	handle /api/* {
+		reverse_proxy web:8000
+	}
+	handle /admin/* {
+		reverse_proxy web:8000
+	}
+
+	# Everything else is the built SPA (baked into this image from the frontend
+	# build stage). try_files makes every path fall back to index.html.
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Sensible headers for a printed-map aesthetic: no framing of our pages,
+	# long-lived immutable hashed assets.
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		X-Frame-Options DENY
+	}
+}
