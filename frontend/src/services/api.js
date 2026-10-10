@@ -4,7 +4,7 @@ import axios from 'axios';
 // image serves this build from Django on the same origin. A hardcoded
 // http://localhost:8000/api silently broke every deployment that was not a
 // local dev machine. Set VITE_API_BASE_URL to point somewhere else.
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BACKEND_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
