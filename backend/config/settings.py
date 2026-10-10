@@ -19,7 +19,18 @@ SECRET_KEY = os.environ.get(
 # is a disclosure bug rather than a convenience.
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False' if ON_VERCEL else 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+# '*' accepts any Host header, which is what host-spoofing and cache-poisoning
+# probes want. Locked to the deployment's own domain on Vercel, left permissive
+# locally so nothing about a dev machine has to change. Append a custom domain
+# through DJANGO_ALLOWED_HOSTS (comma separated).
+ALLOWED_HOSTS = [
+    h.strip() for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+    if h.strip()
+]
+if ON_VERCEL:
+    ALLOWED_HOSTS.append('.vercel.app')
+elif not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,6 +53,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Applies the same origin allowlist the CORS headers advertise, but on the
+    # server. Deliberately ahead of corsheaders, which answers a disallowed
+    # preflight with an empty 200 instead of a refusal, and ahead of rate
+    # limiting so a refused caller cannot spend a token.
+    'middleware.origin_lock.OriginLockMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'middleware.rate_limit.RateLimitAndDDoSProtectionMiddleware',  # Custom DDoS & Rate limiting
     'django.middleware.security.SecurityMiddleware',
@@ -138,9 +154,61 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# CORS Configuration
-CORS_ALLOW_ALL_ORIGINS = True
+# ---------------------------------------------------------------------------
+# Origin policy -- only the Spotter AI frontend may call this API
+# ---------------------------------------------------------------------------
+# Add more origins with FRONTEND_ORIGINS="https://a.example,https://b.example".
+FRONTEND_ORIGINS = [
+    o.strip().rstrip('/') for o in os.environ.get(
+        'FRONTEND_ORIGINS', 'https://spotterai-web.vercel.app'
+    ).split(',') if o.strip()
+]
+
+# Vite picks a different port in some setups, and the Docker image serves the
+# built frontend from Django itself on :8000. These are trusted only off Vercel:
+# nothing on the public deployment is served from localhost, so honouring a
+# localhost origin there would widen the allowlist for no benefit.
+LOCAL_DEV_ORIGINS = [
+    f'http://{host}:{port}'
+    for host in ('localhost', '127.0.0.1')
+    for port in (3000, 4173, 5173, 8000)
+] if not ON_VERCEL else []
+
+ALLOWED_ORIGINS = FRONTEND_ORIGINS + LOCAL_DEV_ORIGINS
+
+# Every Vercel deployment gets its own hostname, so preview builds of the
+# frontend cannot be listed by hand. The pattern is anchored to this project's
+# name -- an unrelated *.vercel.app site does not match.
+ALLOWED_ORIGIN_REGEXES = [
+    r'^https://spotterai-web-[a-z0-9-]+\.vercel\.app$',
+]
+
+CORS_ALLOWED_ORIGINS = ALLOWED_ORIGINS
+CORS_ALLOWED_ORIGIN_REGEXES = ALLOWED_ORIGIN_REGEXES
 CORS_ALLOW_CREDENTIALS = True
+# Never true. This one flag was what made the API readable from every site on
+# the web, because it makes CORS_ALLOWED_ORIGINS above irrelevant.
+CORS_ALLOW_ALL_ORIGINS = False
+
+# Django's own CSRF check needs origins written with their scheme. Only the API
+# host is listed, because Django serves no form anywhere else.
+BACKEND_ORIGINS = [
+    o.strip().rstrip('/') for o in os.environ.get(
+        'BACKEND_ORIGIN', 'https://spotterai-api.vercel.app'
+    ).split(',') if o.strip()
+]
+CSRF_TRUSTED_ORIGINS = BACKEND_ORIGINS + ALLOWED_ORIGINS
+
+# A non-browser caller sends no Origin header, so the allowlist has nothing to
+# check it against. On Vercel those requests are refused outright; off Vercel
+# they pass, so curl, the test suite and local tooling keep working.
+API_ORIGIN_LOCK_STRICT = os.environ.get(
+    'API_ORIGIN_LOCK_STRICT', 'True' if ON_VERCEL else 'False'
+) == 'True'
+
+# Paths the origin lock guards. /admin/ is Django's own UI and carries no JSON
+# API contract, so locking it would only lock the operator out.
+API_ORIGIN_LOCKED_PREFIXES = ('/api/',)
 
 # Security Headers & Protections
 SECURE_BROWSER_XSS_FILTER = True
